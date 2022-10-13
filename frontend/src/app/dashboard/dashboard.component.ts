@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ethers } from 'ethers';
+import { ApiService } from '../services/api.service';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,13 +14,18 @@ export class DashboardComponent implements OnInit {
   wallet: ethers.Wallet | undefined;
   provider: ethers.providers.BaseProvider | undefined;
   balance: string;
+  tokenContractAddress: string;
 
-  constructor() { 
-    this.walletAddress = 'Loading...'
-    this.balance = 'Loading...'
+  constructor(private apiService: ApiService) { 
+    this.walletAddress = 'Loading...';
+    this.balance = 'Loading...';
+    this.tokenContractAddress = '';
   }
 
   ngOnInit(): void {
+    this.apiService.getContractAddress().subscribe((response) => {
+      this.tokenContractAddress = response.result;
+    });
     this.provider = ethers.getDefaultProvider('goerli');
     const newWallet = ethers.Wallet.createRandom();
     this.walletAddress = newWallet.address;
@@ -28,5 +35,9 @@ export class DashboardComponent implements OnInit {
     (error) => {
       console.log(error);
     });
+  }
+
+  claimTokens() {
+
   }
 }
