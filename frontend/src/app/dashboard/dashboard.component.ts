@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ethers } from 'ethers';
 import { ApiService } from '../services/api.service';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,11 +16,19 @@ export class DashboardComponent implements OnInit {
   balance: string;
   tokenContractAddress: string;
 
-  constructor(private apiService: ApiService) { 
+  claimTokensForm: FormGroup;
+
+  constructor(private apiService: ApiService, private fb: FormBuilder) { 
     this.walletAddress = 'Loading...';
     this.balance = 'Loading...';
     this.tokenContractAddress = '';
+    this.claimTokensForm = new FormGroup({
+      name: new FormControl('', Validators.compose([Validators.required])),
+      id: new FormControl('', Validators.compose([Validators.required]))
+    });
   }
+
+  get f() { return this.claimTokensForm.controls; }
 
   ngOnInit(): void {
     this.apiService.getContractAddress().subscribe((response) => {
@@ -37,7 +45,9 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  claimTokens() {
-
+  claimTokens(params: FormGroup) {
+    this.apiService.claimTokens().subscribe((response) => {
+      console.log(response.result);
+    });
   }
 }
