@@ -12,6 +12,7 @@ const TOKENIZEDBALLOT_CONTRACT_ADDRESS ='';
 
 @Injectable()
 export class AppService {
+  
   provider: ethers.providers.Provider;
   myTokenContract: Contract;
   tokenizedBallotContract: Contract;
@@ -54,4 +55,11 @@ export class AppService {
     return 'Hello World!';
   }
   
+  getContractAddress(): string {
+    return "potatoAddr";
+  }
+
+  claimTokens(body: VotingTokenDto) {
+    return true;
+  }
 }
