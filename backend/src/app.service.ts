@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { VotingTokenDto } from './dtos/VotingTokenDto';
 import { ethers, Contract } from 'ethers';
 import { JsonDB, Config } from 'node-json-db';
@@ -41,8 +41,22 @@ export class AppService {
     return "potatoAddr";
   }
 
-  claimTokens(body: VotingTokenDto) {
-    return true;
+  async claimTokens(body: VotingTokenDto) {
+    let whitelistArr: Array<any>;
+    try {
+      whitelistArr = await this.jsonDB.getData("/whitelist");
+    } catch(error) {
+      this.jsonDB.push("/whitelist", []);
+      return false;
+    }
+    const whitelistEntry = whitelistArr.find((element) => 
+      ((element.id === body.id) && (element.name === body.name)));
+    if (whitelistEntry) {
+        //TODO: mint tokens
+        return true;
+    } else {
+      return false;
+    }
   }
 
   async addToWhitelist(body: AddToWhitelistDto) {
