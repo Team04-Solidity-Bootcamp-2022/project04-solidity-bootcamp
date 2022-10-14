@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { VotingTokenDto } from './dtos/VotingTokenDto';
-import { CastVotesDto } from './dtos/CastVotesDto';
-import { DelegateDto } from './dtos/DelegateDto';
 import { ethers, Contract } from 'ethers';
 
 import * as MyTokenJson from './assets/MyToken.json';
@@ -30,29 +28,9 @@ export class AppService {
       this.provider,
     );
   }
-  
-  votingToken(body: VotingTokenDto): string {
-    throw new Error("Method not implemented.");
-  }
-
-  castVotes(body: CastVotesDto): string {
-    throw new Error("Method not implemented.");
-  }
-
-  delegate(body: DelegateDto): string {
-    throw new Error("Method not implemented.");
-  }
-
-  queryResults(): string {
-    throw new Error("Method not implemented.");
-  }
 
   recentVotes(): string {
     throw new Error("Method not implemented.");
-  }
-  
-  getHello(): string {
-    return 'Hello World!';
   }
   
   getContractAddress(): string {
