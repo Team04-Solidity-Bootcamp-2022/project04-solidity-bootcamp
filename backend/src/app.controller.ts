@@ -13,6 +13,11 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @Get("get-contract-address")
+  getContractAddress() {
+    const result = this.appService.getContractAddress();
+    return { result };
+  }
   @Post("voting-token")
   votingToken(
     @Body() body: VotingTokenDto): string {
