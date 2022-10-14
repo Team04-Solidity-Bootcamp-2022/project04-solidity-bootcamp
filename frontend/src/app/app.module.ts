@@ -10,13 +10,19 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DelegateComponent } from './delegate/delegate.component';
+import { CastVotesComponent } from './cast-votes/cast-votes.component';
+import { QueryResultsComponent } from './query-results/query-results.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    DashboardComponent
+    DashboardComponent,
+    DelegateComponent,
+    CastVotesComponent,
+    QueryResultsComponent
   ],
   imports: [
     BrowserModule,
