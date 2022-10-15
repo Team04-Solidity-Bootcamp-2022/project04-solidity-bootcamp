@@ -50,3 +50,5 @@ lerna-debug.log*
 yarn.lock
 .yarn/*
 .yarnrc.yml
+package-lock.json
+.env
