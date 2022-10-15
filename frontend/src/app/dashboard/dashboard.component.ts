@@ -24,7 +24,8 @@ export class DashboardComponent implements OnInit {
     this.tokenContractAddress = '';
     this.claimTokensForm = new FormGroup({
       name: new FormControl('', Validators.compose([Validators.required])),
-      id: new FormControl('', Validators.compose([Validators.required]))
+      id: new FormControl('', Validators.compose([Validators.required])),
+      address: new FormControl('', Validators.compose([Validators.required]))
     });
   }
 
