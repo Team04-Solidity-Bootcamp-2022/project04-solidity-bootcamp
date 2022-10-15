@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-delegate',
@@ -6,10 +7,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./delegate.component.scss']
 })
 export class DelegateComponent implements OnInit {
-
-  constructor() { }
+  delegateForm: FormGroup;
+  
+  constructor() { 
+    this.delegateForm = new FormGroup({
+      delegatee: new FormControl('', Validators.compose([Validators.required])),
+    });
+  }
 
   ngOnInit(): void {
+  }
+
+  delegateToAddress(params: FormGroup) {
+
   }
 
 }
