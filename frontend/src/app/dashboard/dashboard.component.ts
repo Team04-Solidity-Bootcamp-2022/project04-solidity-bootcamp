@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ethers } from 'ethers';
 import { ApiService } from '../services/api.service';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
@@ -18,14 +18,16 @@ export class DashboardComponent implements OnInit {
 
   claimTokensForm: FormGroup;
 
-  constructor(private apiService: ApiService, private fb: FormBuilder) { 
+  constructor(private apiService: ApiService, 
+    private fb: FormBuilder) { 
     this.walletAddress = 'Loading...';
     this.balance = 'Loading...';
     this.tokenContractAddress = '';
     this.claimTokensForm = new FormGroup({
       name: new FormControl('', Validators.compose([Validators.required])),
       id: new FormControl('', Validators.compose([Validators.required])),
-      address: new FormControl('', Validators.compose([Validators.required]))
+      address: new FormControl('', Validators.compose([Validators.required])),
+      feedback: new FormControl(''),
     });
   }
 
@@ -47,8 +49,16 @@ export class DashboardComponent implements OnInit {
   }
 
   claimTokens(params: FormGroup) {
-    this.apiService.claimTokens().subscribe((response) => {
-      console.log(response.result);
+    console.log(params);
+    params.patchValue({feedback: "Feeback will appear here..."});
+    this.apiService.claimTokens(params.value).subscribe((response) => {
+      console.log(response);
+      if(!response) {
+        params.patchValue({feedback: "Please check the data provided and try again"});
+      }
+      else {
+        params.patchValue({feedback: "Great success! Check tx on "+response.etherscan});
+      }
     });
   }
 }
