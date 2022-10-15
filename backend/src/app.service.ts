@@ -2,13 +2,16 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { VotingTokenDto } from './dtos/VotingTokenDto';
 import { ethers, Contract } from 'ethers';
 import { JsonDB, Config } from 'node-json-db';
+import * as dotenv from "dotenv";
 
 import * as MyTokenJson from './assets/MyToken.json';
 import * as TokenizedBallotJson from './assets/TokenizedBallot.json';
 import { AddToWhitelistDto } from './dtos/AddToWhitelistDto';
 
+dotenv.config();
+
 const MYTOKEN_CONTRACT_ADDRESS ='';
-const TOKENIZEDBALLOT_CONTRACT_ADDRESS ='';
+const TOKENIZED_BALLOT_CONTRACT_ADDRESS ='';
 
 @Injectable()
 export class AppService {
@@ -20,12 +23,12 @@ export class AppService {
   constructor() {
     this.provider = ethers.getDefaultProvider('goerli');
     this.myTokenContract = new ethers.Contract(
-      MYTOKEN_CONTRACT_ADDRESS,
+      process.env.MYTOKEN_CONTRACT_ADDRESS,
       MyTokenJson.abi,
       this.provider,
     );
     this.tokenizedBallotContract = new ethers.Contract(
-      TOKENIZEDBALLOT_CONTRACT_ADDRESS,
+      process.env.TOKENIZED_BALLOT_CONTRACT_ADDRESS,
       TokenizedBallotJson.abi,
       this.provider,
     );
@@ -38,7 +41,7 @@ export class AppService {
   }
   
   getContractAddress(): string {
-    return "potatoAddr";
+    return process.env.MYTOKEN_CONTRACT_ADDRESS;
   }
 
   async claimTokens(body: VotingTokenDto) {
@@ -52,8 +55,21 @@ export class AppService {
     const whitelistEntry = whitelistArr.find((element) => 
       ((element.id === body.id) && (element.name === body.name)));
     if (whitelistEntry) {
-        //TODO: mint tokens
-        return true;
+        const wallet = new ethers.Wallet(process.env.PRIVATE_KEY_1);
+        const signer = wallet.connect(this.provider);
+        const signedContract = this.myTokenContract.connect(signer);
+
+        const amount: ethers.BigNumber = ethers.utils.parseEther(
+          process.env.TOKEN_DEFAULT_AMOUNT
+        );
+
+        const tx = await signedContract.mint(
+          body.address,
+          amount
+        );
+        const receipt = await tx.wait();
+        const etherscan = "https://goerli.etherscan.io/tx/" + receipt.transactionHash;
+        return { etherscan };
     } else {
       return false;
     }
