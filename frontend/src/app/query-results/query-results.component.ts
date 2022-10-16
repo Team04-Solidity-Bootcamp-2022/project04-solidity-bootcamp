@@ -13,7 +13,7 @@ const TOKENIZED_BALLOT_CONTRACT_ADDRESS = '0x1a6b6140e530a907dab709382078e9a7c13
 export class QueryResultsComponent implements OnInit {
   provider: ethers.providers.Provider;
   tokenizedBallotContract: Contract;
-  proposalsResult: string;
+  proposalsResult: any[];
 
   constructor() {
     this.provider = ethers.getDefaultProvider('goerli');
@@ -22,7 +22,7 @@ export class QueryResultsComponent implements OnInit {
       TokenizedBallot.abi,
       this.provider,
     );
-    this.proposalsResult = 'Loading...';
+    this.proposalsResult = [{i: '-', name:'Loading...', voteCount:'0'}];
   }
 
   async ngOnInit(): Promise<void> {
@@ -33,14 +33,15 @@ export class QueryResultsComponent implements OnInit {
     console.log(this.provider);
     console.log(this.tokenizedBallotContract);
     const defaultProposals = ["Proposal 1", "Proposal 2", "Proposal 3"];
-    var results = "";
+    var results = [];
     for (let i = 0; i < defaultProposals.length; i++) {
       const proposal = await this.tokenizedBallotContract['proposals'](i);
       const name = ethers.utils.parseBytes32String(proposal.name);
       const voteCountBN = proposal.voteCount;
       const voteCount = ethers.utils.formatEther(voteCountBN);
-      results += "\n" + name + ": " + voteCount + " votes\n";
+      results.push({i, name, voteCount});
     }
     this.proposalsResult = results;
+    console.log(this.proposalsResult);
   }
 }
