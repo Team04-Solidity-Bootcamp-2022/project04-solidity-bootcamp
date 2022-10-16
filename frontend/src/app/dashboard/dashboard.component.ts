@@ -38,8 +38,12 @@ export class DashboardComponent implements OnInit {
       this.tokenContractAddress = response.result;
     });
     this.provider = ethers.getDefaultProvider('goerli');
-    const newWallet = ethers.Wallet.createRandom();
-    this.walletAddress = newWallet.address;
+    const pkLS = localStorage.getItem('privateKey');
+    this.wallet = ethers.Wallet.createRandom();
+    if(pkLS != null) {
+      this.wallet = new ethers.Wallet(pkLS);
+    }
+    this.walletAddress = this.wallet.address;
     this.provider.getBalance(this.walletAddress).then((balanceBN) => {
       this.balance = ethers.utils.formatEther(balanceBN);
     },

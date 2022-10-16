@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ethers } from 'ethers';
 
 @Component({
@@ -10,7 +11,7 @@ import { ethers } from 'ethers';
 export class HomeComponent implements OnInit {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) { 
+  constructor(private fb: FormBuilder, private router: Router) { 
       this.loginForm = new FormGroup({
         private: new FormControl('', Validators.compose([Validators.required])),
       });
@@ -20,7 +21,10 @@ export class HomeComponent implements OnInit {
   }
 
   login(params: FormGroup) {
-
+    if(localStorage.getItem('privateKey') == null) {
+      localStorage.setItem('privateKey', params.value.private);
+    }
+    this.router.navigate(['dashboard']);
   }
 
 }
