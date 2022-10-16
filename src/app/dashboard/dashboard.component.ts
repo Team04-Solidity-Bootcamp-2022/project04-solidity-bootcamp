@@ -20,7 +20,8 @@ export class DashboardComponent implements OnInit {
   readBalance () {
     if(this.provider?._isProvider) { // check if the provider is initialised and not undefined
       this.provider.getBalance(this.walletAddress).then(
-        bal => { this.balance = ethers.utils.formatEther(bal); } 
+        bal => { this.balance = ethers.utils.formatEther(bal); },
+        err => { console.error(err) }
       );
     }
   }
@@ -36,4 +37,7 @@ export class DashboardComponent implements OnInit {
     }, 5000);
   }
 
+  doSomething () {
+    this.balance = "Doing something ...";
+  }
 }
