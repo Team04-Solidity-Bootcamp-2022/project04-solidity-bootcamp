@@ -50,6 +50,7 @@ export class DashboardComponent implements OnInit {
     (error) => {
       console.log(error);
     });
+    this.claimTokensForm.patchValue({address: this.walletAddress});
   }
 
   claimTokens(params: FormGroup) {
