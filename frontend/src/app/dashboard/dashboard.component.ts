@@ -36,6 +36,9 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.apiService.getContractAddress().subscribe((response) => {
       this.tokenContractAddress = response.result;
+    },
+    (error) => {
+      this.tokenContractAddress = "0x0";
     });
     this.provider = ethers.getDefaultProvider('goerli');
     const pkLS = localStorage.getItem('privateKey');

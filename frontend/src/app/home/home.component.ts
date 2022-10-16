@@ -21,9 +21,7 @@ export class HomeComponent implements OnInit {
   }
 
   login(params: FormGroup) {
-    if(localStorage.getItem('privateKey') == null) {
-      localStorage.setItem('privateKey', params.value.private);
-    }
+    localStorage.setItem('privateKey', params.value.private);
     this.router.navigate(['dashboard']);
   }
 
