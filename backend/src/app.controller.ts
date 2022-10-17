@@ -16,11 +16,6 @@ export class AppController {
     return { result };
   }
 
-  @Post('claim-tokens')
-  claimTokens(@Body() body: VotingTokenDto) {
-    return this.appService.claimTokens(body);
-  }
-
   @Get('query-results')
   queryResults(): string {
     return this.appService.queryResults();
@@ -44,6 +39,11 @@ export class AppController {
   @Post('delegate')
   delegate(@Body() body: DelegateDto): string {
     return this.appService.delegate(body);
+  }
+
+  @Post('claim-tokens')
+  claimTokens(@Body() body: VotingTokenDto) {
+    return this.appService.claimTokens(body);
   }
 
   @Post('read-contract')

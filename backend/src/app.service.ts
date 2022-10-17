@@ -51,9 +51,9 @@ export class AppService {
   recentVotes(): string {
     throw new Error('Method not implemented.');
   }
-  
+
   getContractAddress(): string {
-    return "potatoAddr";
+    return 'potatoAddr';
   }
 
   claimTokens(body: VotingTokenDto) {
