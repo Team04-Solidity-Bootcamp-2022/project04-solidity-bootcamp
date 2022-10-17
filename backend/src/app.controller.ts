@@ -2,6 +2,8 @@ import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 import { VotingTokenDto } from './dtos/VotingTokenDto';
 import { AddToWhitelistDto } from './dtos/AddToWhitelistDto';
+import { ContractReaderDto } from './dtos/ContractReader.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
@@ -23,8 +25,34 @@ export class AppController {
     return this.appService.claimTokens(body);
   }
 
-  @Get("recent-votes")
+  @Get('query-results')
+  queryResults(): string {
+    return this.appService.queryResults();
+  }
+
+  @Get('recent-votes')
   recentVotes(): string {
     return this.appService.recentVotes();
+  }
+
+  @Post('read-contract')
+  @ApiResponse({
+    status: 200,
+    description: 'Generic Contract Reader',
+    content: {
+      'application/json': {
+        examples: {
+          Name: { value: { cmd: 'name' } },
+          Symbol: { value: { cmd: 'symbol' } },
+          TotalSupply: { value: { cmd: 'totalSupply' } },
+          BalanceOf: {
+            value: { cmd: 'balanceOf', args: ['contract-address'] },
+          },
+        },
+      },
+    },
+  })
+  readContract(@Body() body: ContractReaderDto): object {
+    return this.appService.readContract(body);
   }
 }

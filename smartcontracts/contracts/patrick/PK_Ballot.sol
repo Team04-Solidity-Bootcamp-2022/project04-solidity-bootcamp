@@ -7,6 +7,12 @@ interface IERC20Votes {
     function mint(address to, uint256 amount) external;
 
     function delegate(address delegatee) external;
+
+    function balanceOf(address account) external view returns (uint256);
+
+    function totalSupply() external view returns (uint256);
+
+    function getVotes(address account) external view returns (uint256);
 }
 
 contract PK_Ballot {
@@ -50,11 +56,7 @@ contract PK_Ballot {
         tokenContract.mint(msg.sender, paymentReceived);
     }
 
-   function delegate(address to) external {
-        tokenContract.delegate(to);
-    }
-
-    function setBlock (uint blockNumber) public onlyOwner {
+    function setBlock(uint256 blockNumber) public onlyOwner {
         referenceBlock = blockNumber;
     }
 
@@ -89,5 +91,29 @@ contract PK_Ballot {
 
     function winnerName() external view returns (bytes32 winnerName_) {
         winnerName_ = proposals[winningProposal()].name;
+    }
+
+    function allProposals() external view returns (Proposal[] memory status_) {
+        status_ = proposals;
+    }
+
+    function getBalance(address _account) external view returns (uint256) {
+        return tokenContract.balanceOf(_account);
+    }
+
+    function getTotalSupply() external view returns (uint256) {
+        return tokenContract.totalSupply();
+    }
+
+    function getVotes() external view returns (uint256) {
+        return tokenContract.getVotes(msg.sender);
+    }
+
+    function getPastVotes() external view returns (uint256) {
+        return tokenContract.getPastVotes(msg.sender, referenceBlock);
+    }
+
+    function delegate(address _to) external {
+        tokenContract.delegate(_to);
     }
 }
