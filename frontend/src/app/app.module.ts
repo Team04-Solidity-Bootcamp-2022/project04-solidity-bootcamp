@@ -13,6 +13,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DelegateComponent } from './delegate/delegate.component';
 import { CastVotesComponent } from './cast-votes/cast-votes.component';
 import { QueryResultsComponent } from './query-results/query-results.component';
+import { HeaderComponent } from './header/header.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { QueryResultsComponent } from './query-results/query-results.component';
     DashboardComponent,
     DelegateComponent,
     CastVotesComponent,
-    QueryResultsComponent
+    QueryResultsComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,

@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { VotingTokenDto } from './dtos/VotingTokenDto';
 import { ethers, Contract } from 'ethers';
+import { JsonDB, Config } from 'node-json-db';
+import * as dotenv from "dotenv";
 import { ContractReaderDto } from './dtos/ContractReader.dto';
 
 import * as MyTokenJson from './assets/MyToken.json';
 import * as TokenizedBallotJson from './assets/TokenizedBallot.json';
+import { AddToWhitelistDto } from './dtos/AddToWhitelistDto';
+
+dotenv.config();
 
 @Injectable()
 export class AppService {
@@ -13,6 +18,7 @@ export class AppService {
   provider: ethers.providers.Provider;
   myTokenContract: Contract;
   tokenizedBallotContract: Contract;
+  jsonDB: JsonDB;
 
   constructor() {
     this.MYTOKEN_CONTRACT_ADDRESS = process.env.MYTOKEN_CONTRACT_ADDRESS;
@@ -21,7 +27,7 @@ export class AppService {
 
     this.provider = ethers.getDefaultProvider('goerli');
     this.myTokenContract = new ethers.Contract(
-      this.MYTOKEN_CONTRACT_ADDRESS,
+      process.env.MYTOKEN_CONTRACT_ADDRESS,
       MyTokenJson.abi,
       this.provider,
     );
@@ -30,18 +36,7 @@ export class AppService {
       TokenizedBallotJson.abi,
       this.provider,
     );
-  }
-
-  votingToken(body: VotingTokenDto): string {
-    throw new Error('Method not implemented.');
-  }
-
-  castVotes(body: CastVotesDto): string {
-    throw new Error('Method not implemented.');
-  }
-
-  delegate(body: DelegateDto): string {
-    throw new Error('Method not implemented.');
+    this.jsonDB = new JsonDB(new Config("src/assets/db.json", true, false, '/'));
   }
 
   queryResults(): string {
@@ -51,17 +46,50 @@ export class AppService {
   recentVotes(): string {
     throw new Error('Method not implemented.');
   }
-
+  
   getContractAddress(): string {
-    return 'potatoAddr';
+    return process.env.MYTOKEN_CONTRACT_ADDRESS;
   }
 
-  claimTokens(body: VotingTokenDto) {
-    return true;
+  async claimTokens(body: VotingTokenDto) {
+    let whitelistArr: Array<any>;
+    try {
+      whitelistArr = await this.jsonDB.getData("/whitelist");
+    } catch(error) {
+      this.jsonDB.push("/whitelist", []);
+      return false;
+    }
+    const whitelistEntry = whitelistArr.find((element) => 
+      ((element.id === body.id) && (element.name === body.name)));
+    if (whitelistEntry) {
+        const wallet = new ethers.Wallet(process.env.PRIVATE_KEY_1);
+        const signer = wallet.connect(this.provider);
+        const signedContract = this.myTokenContract.connect(signer);
+
+        const amount: ethers.BigNumber = ethers.utils.parseEther(
+          process.env.TOKEN_DEFAULT_AMOUNT
+        );
+
+        const tx = await signedContract.mint(
+          body.address,
+          amount
+        );
+        const receipt = await tx.wait();
+        const etherscan = "https://goerli.etherscan.io/tx/" + receipt.transactionHash;
+        return { etherscan };
+    } else {
+      return false;
+    }
   }
 
-  getHello(): string {
-    return 'Hello World!';
+  async addToWhitelist(body: AddToWhitelistDto) {
+    try {
+      const currentData = await this.jsonDB.getData("/whitelist");
+    } catch(error) {
+      this.jsonDB.push("/whitelist", []);
+    }
+    await this.jsonDB.push("/whitelist[]", body);
+    return await this.jsonDB.getData("/whitelist[-1]");
   }
 
   /**

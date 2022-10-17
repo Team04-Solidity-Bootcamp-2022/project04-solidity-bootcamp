@@ -1,1 +1,25 @@
-<p>delegate works!</p>
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">No time to vote? Delegate your votes here!</h1>
+    <div class="container">
+        <form [formGroup]="delegateForm" (ngSubmit)="delegateToAddress(delegateForm)" class="myDelegateForm">
+          <div class="row">
+            <div class="form-group">
+              <div class="form-group">
+                <label for="delegatee">Delegatee:</label>
+                  <input class="form-control input-lg" type="text" formControlName="delegatee" id="delegatee" placeholder="Place the delegatee here">
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <button type="submit" [disabled]="delegateForm.invalid" class="btn btn-primary btn-lg px-4 gap-3">Delegate now</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      <div class="col-lg-6 mx-auto">
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          <button type="button" class="btn btn-primary btn-lg px-4 gap-3" routerLink="/dashboard">Back</button>
+        </div>
+      </div>
+    </div>
+</div>

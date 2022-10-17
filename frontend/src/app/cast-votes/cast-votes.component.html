@@ -1,1 +1,26 @@
-<p>cast-votes works!</p>
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">Cast your votes here!</h1>
+    <div class="container">
+        <form [formGroup]="castVotesForm" (ngSubmit)="castVotes(castVotesForm)" class="myCastVotesForm">
+          <div class="row">
+              <div class="form-group">
+                <label for="proposal">Proposal #:</label>
+                  <input class="form-control" type="text" formControlName="proposal" id="proposal" placeholder="Insert the proposal id (0-2)">
+                </div>
+            <div class="row">
+                <div class="form-group">
+                      <label for="votes">Votes:</label>
+                      <input class="form-control input-sm" type="text" formControlName="votes" id="votes" placeholder="Amount of votes">
+                </div>
+              </div>
+            <div class="row">
+              <div class="form-group">
+                <button type="submit" [disabled]="castVotesForm.invalid" class="btn btn-primary btn-lg px-4 gap-3">Cast</button>
+                <label for="or">OR</label>
+                <button type="button" class="btn btn-primary btn-lg px-4 gap-3" routerLink="/dashboard">Back</button>
+              </div>
+            </div>
+          </div>
+        </form>
+    </div>
+</div>

@@ -1,1 +1,33 @@
-<p>query-results works!</p>
+<div class="px-4 py-5 my-5 text-center">
+    <h2 class="display-10">Please wait, results will be available soon!</h2>
+    <button type="button" class="btn btn-primary btn-lg px-4 gap-3" routerLink="/dashboard">Back</button>
+    <br>
+    <br>
+    <br>
+    <div class='panel panel-primary'>  
+        <h1 class="display-10 fw-bold">
+        <div class='panel-heading'>  
+            Tokenized Ballot Results  
+        </div></h1>   
+        <div class='panel-body'>  
+            <div class='table-responsive'>  
+                <table class='table table-striped'>  
+                    <thead>  
+                        <tr>
+                            <th scope="col">#</th>  
+                            <th scope="col">Proposal Name</th>  
+                            <th scope="col" >votes</th>  
+                        </tr>  
+                    </thead>  
+                    <tbody>  
+                        <tr *ngFor="let p of proposalsResult;">
+                            <td scope="row">{{p.i}}</td>
+                            <td scope="row">{{p.name}}</td>  
+                            <td scope="row">{{p.voteCount}}</td>  
+                        </tr>  
+                    </tbody>  
+                </table>  
+            </div>  
+        </div>  
+    </div>  
+</div>

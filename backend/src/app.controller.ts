@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 import { VotingTokenDto } from './dtos/VotingTokenDto';
-import { CastVotesDto } from './dtos/CastVotesDto';
-import { DelegateDto } from './dtos/DelegateDto';
+import { AddToWhitelistDto } from './dtos/AddToWhitelistDto';
 import { ContractReaderDto } from './dtos/ContractReader.dto';
 import { ApiResponse } from '@nestjs/swagger';
 
@@ -10,10 +9,20 @@ import { ApiResponse } from '@nestjs/swagger';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('get-contract-address')
+  @Get("get-contract-address")
   getContractAddress() {
     const result = this.appService.getContractAddress();
     return { result };
+  }
+  @Post("add-whitelist")
+  addToWhitelist(
+    @Body() body: AddToWhitelistDto) {
+      return this.appService.addToWhitelist(body);
+  }
+  @Post("claim-tokens")
+  claimTokens(
+    @Body() body: VotingTokenDto) {
+    return this.appService.claimTokens(body);
   }
 
   @Get('query-results')
@@ -24,26 +33,6 @@ export class AppController {
   @Get('recent-votes')
   recentVotes(): string {
     return this.appService.recentVotes();
-  }
-
-  @Post('voting-token')
-  votingToken(@Body() body: VotingTokenDto): string {
-    return this.appService.votingToken(body);
-  }
-
-  @Post('cast-votes')
-  castVotes(@Body() body: CastVotesDto): string {
-    return this.appService.castVotes(body);
-  }
-
-  @Post('delegate')
-  delegate(@Body() body: DelegateDto): string {
-    return this.appService.delegate(body);
-  }
-
-  @Post('claim-tokens')
-  claimTokens(@Body() body: VotingTokenDto) {
-    return this.appService.claimTokens(body);
   }
 
   @Post('read-contract')
